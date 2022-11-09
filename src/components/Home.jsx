@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategories, getQuery } from '../services/api';
+import { getCategories, getQuery, getCategoryById } from '../services/api';
 
 export default class Home extends Component {
   state = {
     categoria: [],
     query: '',
     renderList: '',
+    renderCategory: '',
   };
 
   async componentDidMount() {
@@ -15,6 +16,31 @@ export default class Home extends Component {
       categoria,
     });
   }
+
+  pesquisarCategoria = async ({ target }) => {
+    const { id } = target;
+    const categorias = await getCategoryById(id);
+    const listaDeCategorias = categorias.results;
+    const elementoCategoria = (
+      <div>
+        <ul>
+          {listaDeCategorias.map((e) => (
+            <li
+              data-testid="product"
+              key={ e.title }
+            >
+              {e.title}
+              {e.thumbnail}
+              {e.price}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+    this.setState({
+      renderCategory: elementoCategoria,
+    });
+  };
 
   atualizarInput = ({ target }) => {
     this.setState({
@@ -52,7 +78,7 @@ export default class Home extends Component {
   };
 
   render() {
-    const { categoria, query, renderList } = this.state;
+    const { categoria, query, renderList, renderCategory } = this.state;
     return (
       <div>
         <h1
@@ -64,14 +90,14 @@ export default class Home extends Component {
         <Link to="/carrinho" data-testid="shopping-cart-button">Carrinho de Compras</Link>
         <div>
           {categoria.map((e) => (
-            <label key={ e.id } htmlFor={ e.name } data-testid="category">
+            <label key={ e.id } htmlFor={ e.id } data-testid="category">
               {e.name}
               <input
                 type="radio"
                 value={ e.name }
-                id={ e.name }
+                id={ e.id }
                 name="category"
-                // onClick=""
+                onClick={ this.pesquisarCategoria }
               />
             </label>
           ))}
@@ -96,6 +122,7 @@ export default class Home extends Component {
           </button>
         </form>
         { renderList }
+        { renderCategory }
         <div />
       </div>
     );
