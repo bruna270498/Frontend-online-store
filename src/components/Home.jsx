@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { getCategories } from '../services/api';
+import { getCategories, getQuery } from '../services/api';
 
 export default class Home extends Component {
   state = {
     categoria: [],
+    query: '',
+    renderList: '',
   };
 
   async componentDidMount() {
@@ -14,8 +16,43 @@ export default class Home extends Component {
     });
   }
 
+  atualizarInput = ({ target }) => {
+    this.setState({
+      query: target.value,
+    });
+  };
+
+  pesquisarProduto = async (event) => {
+    event.preventDefault();
+    const { query } = this.state;
+    const produtos = await getQuery(query);
+    const listaDeProdutos = produtos.results;
+    const elemento = (
+      <div>
+        {listaDeProdutos.length < 1 ? 'Nenhum produto foi encontrado'
+          : (
+            <ul>
+              {listaDeProdutos.map((e) => (
+                <li
+                  data-testid="product"
+                  key={ e.title }
+                >
+                  {e.title}
+                  {e.thumbnail}
+                  {e.price}
+                </li>
+              ))}
+            </ul>
+          )}
+      </div>
+    );
+    this.setState({
+      renderList: elemento,
+    });
+  };
+
   render() {
-    const { categoria } = this.state;
+    const { categoria, query, renderList } = this.state;
     return (
       <div>
         <h1
@@ -34,11 +71,32 @@ export default class Home extends Component {
                 value={ e.name }
                 id={ e.name }
                 name="category"
-                onClick=""
+                // onClick=""
               />
             </label>
           ))}
         </div>
+        <form>
+          <label htmlFor="queryId">
+            <input
+              data-testid="query-input"
+              type="text"
+              id="queryId"
+              value={ query }
+              onChange={ this.atualizarInput }
+            />
+          </label>
+          <button
+            data-testid="query-button"
+            type="submit"
+            value={ query }
+            onClick={ this.pesquisarProduto }
+          >
+            botão
+          </button>
+        </form>
+        { renderList }
+        <div />
       </div>
     );
   }
