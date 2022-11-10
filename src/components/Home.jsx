@@ -32,6 +32,19 @@ export default class Home extends Component {
               {e.title}
               {e.thumbnail}
               {e.price}
+              <Link
+                data-testid="product-detail-link"
+                to={ `/detalhes/${e.id}` }
+              >
+                Detalhes do Produto
+              </Link>
+              <button
+                data-testid="product-add-to-cart"
+                type="button"
+                onClick={ () => this.adicionarProdutoaoCarrinho(e) }
+              >
+                Adicionar ao Carrinho
+              </button>
             </li>
           ))}
         </ul>
@@ -66,6 +79,19 @@ export default class Home extends Component {
                   {e.title}
                   {e.thumbnail}
                   {e.price}
+                  <Link
+                    data-testid="product-detail-link"
+                    to={ `/detalhes/${e.id}` }
+                  >
+                    Detalhes do Produto
+                  </Link>
+                  <button
+                    data-testid="product-add-to-cart"
+                    type="button"
+                    onClick={ () => this.adicionarProdutoaoCarrinho(e) }
+                  >
+                    Adicionar ao Carrinho
+                  </button>
                 </li>
               ))}
             </ul>
@@ -75,6 +101,34 @@ export default class Home extends Component {
     this.setState({
       renderList: elemento,
     });
+  };
+
+  adicionarProdutoaoCarrinho = (produto) => {
+    let produtosDoCarrinho = JSON.parse(localStorage.getItem('carrinho'));
+    if (produtosDoCarrinho === null) {
+      produtosDoCarrinho = [];
+    }
+    const { title, price, id } = produto;
+
+    const check = produtosDoCarrinho.some((e) => e.id === id);
+
+    if (check === true) {
+      produtosDoCarrinho.forEach((e) => {
+        if (e.id === id) {
+          e.quantidade += 1;
+        }
+      });
+      localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
+    } else {
+      const mock = {
+        id,
+        title,
+        price,
+        quantidade: 1,
+      };
+      produtosDoCarrinho.push(mock);
+      localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
+    }
   };
 
   render() {
