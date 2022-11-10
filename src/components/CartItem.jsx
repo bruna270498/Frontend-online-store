@@ -1,24 +1,23 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export default class CartItem extends Component {
   render() {
-    const { produto, adicionarMaisUm, removerUm, remover, quantidadeProduto } = this.props
+    const { produto,
+      adicionarMaisUm,
+      removerUm,
+      remover,
+    } = this.props;
+
     return (
       <div>
         <h4 data-testid="shopping-cart-product-name">
-          Nome:
-          {' '}
           { produto.title }
         </h4>
         <h4>
-          Preço:
-          {' '}
           { produto.price }
         </h4>
-        <h4 data-testid="shopping-cart-product-quantity">
-          {' '}
-          { quantidadeProduto }
-        </h4>
+        <div data-testid="shopping-cart-product-quantity">{ produto.quantidade }</div>
         <button
           id={ produto.id }
           value="acrescentar"
@@ -48,3 +47,7 @@ export default class CartItem extends Component {
     );
   }
 }
+
+CartItem.propTypes = {
+  adicionarMaisUm: PropTypes.func,
+}.isRequired;

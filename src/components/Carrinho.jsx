@@ -5,12 +5,11 @@ export default class Carrinho extends Component {
   state = {
     produtosDoCarrinho: [],
     produtosProntos: false,
-    quantidadeProduto: 1,
   };
 
   componentDidMount() {
     const produtosDoCarrinho = JSON.parse(localStorage.getItem('carrinho'));
-    if (produtosDoCarrinho !== null) {
+    if (produtosDoCarrinho.length !== 0) {
       this.setState({
         produtosProntos: true,
         produtosDoCarrinho,
@@ -18,38 +17,68 @@ export default class Carrinho extends Component {
     }
   }
 
-  componentWillUnmount() {
+  updateStorage = () => {
     const { produtosDoCarrinho } = this.state;
     localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
-  }
+  };
 
   adicionarMaisUm = (id) => {
     const { produtosDoCarrinho } = this.state;
-    produtosDoCarrinho.forEach((produto) => {
-      if (id === produto.id) {
-        produto.quantidade += 1;
+    produtosDoCarrinho.forEach((e) => {
+      if (e.id === id) {
+        e.quantidade += 1;
       }
-      this.setState({
-        produtosDoCarrinho,
-      });
     });
+
+    this.setState({
+      produtosDoCarrinho,
+    });
+    this.updateStorage();
   };
 
   removerUm = (id) => {
-    const produtosDoCarrinho = JSON.parse(localStorage.getItem('carrinho'));
-    produtosDoCarrinho.forEach((produto) => {
-      if (id === produto.id) {
-        this.setState((prevState) => ({
-          quantidadeProduto: prevState.quantidadeProduto - 1,
-        }));
-        produto.quantidade -= 1;
+    const { produtosDoCarrinho } = this.state;
+    produtosDoCarrinho.forEach((e) => {
+      if (e.id === id && e.quantidade > 1) {
+        e.quantidade -= 1;
       }
     });
-    localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
+
+    this.setState({
+      produtosDoCarrinho,
+    });
+    this.updateStorage();
+  };
+
+  remover = (id) => {
+    const { produtosDoCarrinho } = this.state;
+    let indiceDoProduto;
+    produtosDoCarrinho.forEach((e, i) => {
+      if (e.id === id) {
+        indiceDoProduto = i;
+      }
+    });
+
+    produtosDoCarrinho.splice(indiceDoProduto, 1);
+    this.setState({
+      produtosDoCarrinho,
+    });
+    this.checkCarrinhoVazio();
+    this.updateStorage();
+  };
+
+  checkCarrinhoVazio = () => {
+    const { produtosDoCarrinho } = this.state;
+
+    const value = produtosDoCarrinho.length !== 0;
+
+    this.setState({
+      produtosProntos: value,
+    });
   };
 
   render() {
-    const { produtosDoCarrinho, produtosProntos, quantidadeProduto } = this.state;
+    const { produtosDoCarrinho, produtosProntos } = this.state;
     const carrinhoVazio = (
       <h1
         data-testid="shopping-cart-empty-message"
@@ -65,10 +94,9 @@ export default class Carrinho extends Component {
             <CartItem
               key={ key }
               produto={ e }
-              quantidadeProduto={ quantidadeProduto }
               adicionarMaisUm={ () => this.adicionarMaisUm(e.id) }
               removerUm={ () => this.removerUm(e.id) }
-              remover={ () => this.remover(e) }
+              remover={ () => this.remover(e.id) }
             />
           )) : carrinhoVazio }
       </div>
