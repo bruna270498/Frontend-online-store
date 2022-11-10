@@ -21,11 +21,11 @@ export default class Detalhes extends Component {
     return (
       <div>
         <h1>Detalhes do Produto</h1>
-        <h2 data-testid="product-detail-name">
+        <h3 data-testid="product-detail-name">
           Nome:
           {' '}
           {produto.title}
-        </h2>
+        </h3>
         <img
           data-testid="product-detail-image"
           src={ produto.thumbnail }
