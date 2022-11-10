@@ -16,6 +16,34 @@ export default class Detalhes extends Component {
     });
   }
 
+  adicionarProdutoaoCarrinho = (produto) => {
+    let produtosDoCarrinho = JSON.parse(localStorage.getItem('carrinho'));
+    if (produtosDoCarrinho === null) {
+      produtosDoCarrinho = [];
+    }
+    const { title, price, id } = produto;
+
+    const check = produtosDoCarrinho.some((e) => e.id === id);
+
+    if (check === true) {
+      produtosDoCarrinho.forEach((e) => {
+        if (e.id === id) {
+          e.quantidade += 1;
+        }
+      });
+      localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
+    } else {
+      const mock = {
+        id,
+        title,
+        price,
+        quantidade: 1,
+      };
+      produtosDoCarrinho.push(mock);
+      localStorage.setItem('carrinho', JSON.stringify(produtosDoCarrinho));
+    }
+  };
+
   render() {
     const { produto } = this.state;
     return (
@@ -36,12 +64,19 @@ export default class Detalhes extends Component {
           {' '}
           { produto.price }
         </h3>
+        <button
+          type="submit"
+          data-testid="product-detail-add-to-cart"
+          onClick={ () => this.adicionarProdutoaoCarrinho(produto) }
+        >
+          Adicionar ao Carrinho
+        </button>
         <Link
           data-testid="shopping-cart-button"
           type="button"
           to="/carrinho"
         >
-          Adicionar ao Carrinho
+          vá para o carrinho
         </Link>
       </div>
     );
