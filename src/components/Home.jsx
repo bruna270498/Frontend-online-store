@@ -32,6 +32,12 @@ export default class Home extends Component {
               {e.title}
               {e.thumbnail}
               {e.price}
+              <Link
+                data-testid="product-detail-link"
+                to={ `/detalhes/${e.id}` }
+              >
+                Detalhes do Produto
+              </Link>
             </li>
           ))}
         </ul>
@@ -66,6 +72,12 @@ export default class Home extends Component {
                   {e.title}
                   {e.thumbnail}
                   {e.price}
+                  <Link
+                    data-testid="product-detail-link"
+                    to={ `/detalhes/${e.id}` }
+                  >
+                    Detalhes do Produto
+                  </Link>
                 </li>
               ))}
             </ul>
