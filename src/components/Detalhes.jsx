@@ -82,7 +82,7 @@ export default class Detalhes extends Component {
   };
 
   render() {
-    const { produto, mensagemError, comentarioAvaliador } = this.state;
+    const { produto, mensagemError } = this.state;
     return (
       <div>
         <h1>Detalhes do Produto</h1>
