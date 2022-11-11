@@ -9,7 +9,7 @@ export default class Carrinho extends Component {
 
   componentDidMount() {
     const produtosDoCarrinho = JSON.parse(localStorage.getItem('carrinho'));
-    if (produtosDoCarrinho.length !== 0) {
+    if (produtosDoCarrinho !== null) {
       this.setState({
         produtosProntos: true,
         produtosDoCarrinho,
