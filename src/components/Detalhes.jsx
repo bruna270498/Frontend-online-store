@@ -21,7 +21,9 @@ export default class Detalhes extends Component {
       produto,
     });
     const comentarioAvaliador = JSON.parse(localStorage.getItem(produto.id));
-    this.setState({ comentarioAvaliador });
+    if (comentarioAvaliador !== null) {
+      this.setState({ comentarioAvaliador });
+    }
   }
 
   adicionarProdutoaoCarrinho = (produto) => {
@@ -69,7 +71,7 @@ export default class Detalhes extends Component {
   };
 
   avaliarBtn = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     const { avalia, email, infoForm, produto } = this.state;
     if (avalia === '' || email === '') {
       // retorna a mensagem de erro campos invalidos
@@ -185,13 +187,6 @@ export default class Detalhes extends Component {
 
           )}
         </form>
-        {/* {comentarioAvaliador.map((e, index) => (
-          <div key={ index }>
-            <h3>{e.email}</h3>
-            <h3>{e.avalia}</h3>
-            <p>{e.comentario}</p>
-          </div>
-        ))} */}
       </div>
     );
   }
